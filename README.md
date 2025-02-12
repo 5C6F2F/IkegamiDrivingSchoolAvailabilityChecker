@@ -1,0 +1,2 @@
+# IkegamiDrivingSchoolAvailabilityChecker
+池上自動車教習所における技能教習の予約空き状況を知らせます。
