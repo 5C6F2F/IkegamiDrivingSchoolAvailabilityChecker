@@ -1,0 +1,24 @@
+{
+  "name": "IkegamiDrivingSchoolAvailabilityChecker",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "ikegami-driving-school-availability-checker",
+  "workspaceFolder": "/IkegamiDrivingSchoolAvailabilityChecker",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "leodevbro.blockman",
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "tamasfe.even-better-toml",
+        "MS-CEINTL.vscode-language-pack-ja",
+        "PKief.material-icon-theme",
+        "shardulm94.trailing-spaces",
+        "vscodevim.vim",
+        "rust-lang.rust-analyzer",
+        "vadimcn.vscode-lldb",
+        "tal7aouy.indent-colorizer",
+        "fill-labs.dependi"
+      ]
+    }
+  }
+}

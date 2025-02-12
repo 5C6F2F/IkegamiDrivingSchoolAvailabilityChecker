@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  ikegami-driving-school-availability-checker:
+    tty: true
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    volumes:
+      - type: volume
+        source: ikegami-driving-school-availability-checker-volume
+        target: /IkegamiDrivingSchoolAvailabilityChecker/
+      - type: bind
+        source: C:/Users/bouningen/.ssh/
+        target: /root/.ssh
+    command: [ "bash" ]
+
+volumes:
+  ikegami-driving-school-availability-checker-volume:
