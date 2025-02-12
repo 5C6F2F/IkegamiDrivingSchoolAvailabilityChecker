@@ -1,0 +1,7 @@
+[discord_notifier]
+token = ""
+channel_id = ""
+
+[login_info]
+id = ""
+password = ""
