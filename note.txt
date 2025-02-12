@@ -1,0 +1,4 @@
+予約可能な日時: status1
+自分が予約した日時: status3
+他人が予約した日時: status0
+営業時間外: status9
