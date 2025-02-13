@@ -1,6 +1,6 @@
 use crate::{
     availability::Availability, browser_handler::BrowserHandler, notifier::DiscordNotifier,
-    AVAILABLE_STATUS, CLASS_PERIOD, DATE_FORMAT, ONE_WEEK, RESERVED_STATUS,
+    AVAILABLE_STATUS, CLASS_PERIOD, DATE_FORMAT, ONE_WEEK,
 };
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use std::error::Error;
@@ -36,14 +36,14 @@ impl AvailabilityChecker {
         let start_date = self.browser.get_start_date()?;
         let table_vec = self.browser.get_table_vec()?;
 
-        let available_datetime = self.get_availability(start_date, &table_vec);
+        let (available_datetime, unavailable_datetime) =
+            self.get_availability_and_unavailability(start_date, &table_vec);
+
         let new_available_datetime = self.get_new_available_datetime_string(available_datetime);
+        let new_unavailable_datetime =
+            self.get_new_unavailable_datetime_string(unavailable_datetime);
 
-        let unavailable_datetime = self.get_unavailable_datetime(start_date, &table_vec);
-        let unavailable_datetime_reserved_by_others =
-            self.get_unavailable_datetime_string_reserved_by_others(unavailable_datetime);
-
-        if new_available_datetime.is_empty() && unavailable_datetime_reserved_by_others.is_empty() {
+        if new_available_datetime.is_empty() && new_unavailable_datetime.is_empty() {
             return Ok(());
         }
 
@@ -62,12 +62,13 @@ impl AvailabilityChecker {
         Ok(())
     }
 
-    fn get_availability(
+    fn get_availability_and_unavailability(
         &self,
         start_date: NaiveDate,
         table_vec: &Vec<Vec<String>>,
-    ) -> Vec<NaiveDateTime> {
+    ) -> (Vec<NaiveDateTime>, Vec<NaiveDateTime>) {
         let mut available_datetime = vec![];
+        let mut unavailable_datetime = vec![];
 
         for i in 0..ONE_WEEK {
             let date = start_date + chrono::Duration::days(i as i64);
@@ -85,11 +86,13 @@ impl AvailabilityChecker {
 
                 if table_vec_ij == AVAILABLE_STATUS {
                     available_datetime.push(datetime);
+                } else {
+                    unavailable_datetime.push(datetime);
                 }
             }
         }
 
-        available_datetime
+        (available_datetime, unavailable_datetime)
     }
 
     fn get_new_available_datetime_string(
@@ -107,37 +110,7 @@ impl AvailabilityChecker {
         new_available_datetime
     }
 
-    fn get_unavailable_datetime(
-        &self,
-        start_date: NaiveDate,
-        table_vec: &Vec<Vec<String>>,
-    ) -> Vec<NaiveDateTime> {
-        let mut datetime_reserved_by_others = vec![];
-
-        for i in 0..ONE_WEEK {
-            let date = start_date + chrono::Duration::days(i as i64);
-
-            for j in 0..CLASS_PERIOD {
-                let datetime =
-                    NaiveDateTime::new(date, NaiveTime::from_hms_opt(9 + j as u32, 0, 0).unwrap());
-
-                let Some(table_vec_i) = table_vec.get(i) else {
-                    continue;
-                };
-                let Some(table_vec_ij) = table_vec_i.get(j) else {
-                    continue;
-                };
-
-                if table_vec_ij == RESERVED_STATUS {
-                    datetime_reserved_by_others.push(datetime);
-                }
-            }
-        }
-
-        datetime_reserved_by_others
-    }
-
-    fn get_unavailable_datetime_string_reserved_by_others(
+    fn get_new_unavailable_datetime_string(
         &mut self,
         unavailable_datetime: Vec<NaiveDateTime>,
     ) -> Vec<String> {

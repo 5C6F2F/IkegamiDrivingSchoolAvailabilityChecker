@@ -13,7 +13,6 @@ use login_info::LoginInfo;
 use notifier::DiscordNotifier;
 
 const AVAILABLE_STATUS: &str = "status1";
-const RESERVED_STATUS: &str = "status0";
 const DATE_FORMAT: &str = "%-m月%-d日%-H時";
 const ONE_WEEK: usize = 7;
 const CLASS_PERIOD: usize = 12;
